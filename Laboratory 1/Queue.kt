@@ -1,6 +1,6 @@
 interface Queue<T> {
 
-    fun push(value: T)
+    fun push(value: T?)
 
     fun pop(): T?
 
@@ -13,9 +13,9 @@ interface Queue<T> {
 
 class MyQueue<T>(var head: Node<T>? = null) : Queue<T> {
 
-    class Node<T>(val data: T, var next: Node<T>? = null)
+    class Node<T>(val data: T?, var next: Node<T>? = null)
 
-    override fun push(value: T) {
+    override fun push(value: T?) {
         val newNode: Node<T> = Node(value)
         var currentNode = head
 
@@ -31,8 +31,8 @@ class MyQueue<T>(var head: Node<T>? = null) : Queue<T> {
 
     override fun pop(): T? {
         if (head != null) {
-            val result: T = head!!.data
-            head = head!!.next
+            val result: T? = head?.data
+            head = head?.next
             return result
         } else {
             throw IndexOutOfBoundsException("Impossible call method pop() from empty Queue")
@@ -60,6 +60,20 @@ class MyQueue<T>(var head: Node<T>? = null) : Queue<T> {
     override fun peek(): T? {
         return head?.data
     }
+
+    fun peek1(): T? {
+        if (head != null) {
+            val result: T? = this.pop()
+            if (result != null) {
+                this.push(result)
+                for (i in 1 until this.size()) {
+                    this.push(this.pop())
+                }
+                return result
+            }
+        }
+        return null
+    }
 }
 
 
@@ -67,7 +81,7 @@ fun main() {
     val queue : MyQueue<Int> = MyQueue()
 
     queue.push(4)
-    queue.push(3)
+    queue.push(3) // [4, 3]
     println(queue.size() == 2)
     queue.clear()
     println(queue.peek() == null)
@@ -77,5 +91,14 @@ fun main() {
     queue.push(6)
     println(queue.pop() == 5)
     println(queue.size() == 1)
+    // [6]
+    queue.push(3)
+    queue.push(1)
+    // [6, 3, 1]
+    println(queue.peek1()) // 6
+    for (i in 0 until queue.size()) {
+        print(queue.pop())
+        print(", ")
+    }
 
 }

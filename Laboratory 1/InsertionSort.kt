@@ -1,15 +1,16 @@
 // Generic function
 fun <T: Comparable<T>> insertionSort(list: MutableList<T>) : List<T> {
-    for (i in 1 until list.size) {
-        val item = list[i]
+    val copyList = list.toMutableList()
+    for (i in 1 until copyList.size) {
+        val item = copyList[i]
         var j = i
-        while (j > 0 && item < list[j - 1]) {
-            list[j] = list[j - 1]
+        while (j > 0 && item < copyList[j - 1]) {
+            copyList[j] = copyList[j - 1]
             j -= 1
         }
-        list[j] = item
+        copyList[j] = item
     }
-    return list
+    return copyList
 }
 
 // Generic extension function
@@ -41,5 +42,4 @@ fun main() {
 
     strings.insertionSort()
     println(strings)
-
 }
